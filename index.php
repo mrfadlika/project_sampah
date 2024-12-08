@@ -1,3 +1,10 @@
+<?php
+session_start();
+include 'api/check_sesi.php';
+include 'api/db_check.php';
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,7 +21,7 @@
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link href="css/page.min.css" rel="stylesheet">
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body id="page-top">
@@ -29,17 +36,16 @@
             <hr class="sidebar-divider my-6" style="margin-top: 60px;">
 
             <li class="nav-item dropdown no-arrow">
-                <span class="text-white"><h6 style="text-align: center;">Nama Orang</h6></span>
+                <span class="text-white"><h6 style="text-align: center;"><?php echo $row['nama'] ?></h6></span>
                 <a class="nav-link collapsed d-flex align-items-center justify-content-center p-0" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseTwo">
                     <div style="text-align: center;">
-                        <span><p class="my-2 mr-2 mb-2">Sekolah</p></span>
+                        <span><p class="my-2 mr-2 mb-2"><?php echo $row['role'] ?></p></span>
                     </div>
                 </a>                
                 <div id="collapseOne" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="">Profile</a>
-                        <a class="collapse-item" href="">Logout</a>
+                        <a class="collapse-item" href="profile.php">Profile</a>
+                        <a class="collapse-item" href="logout.php">Logout</a>
                     </div>
                 </div>
             </li>
@@ -339,25 +345,33 @@
         </div>
     </div>
 
-    <!-- Logout Modal-->
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    
+<script>
+    <?php if (isset($_SESSION['username'])): ?>
+        console.log("Username dalam sesi: <?php echo $_SESSION['username']; ?>");
+    <?php else: ?>
+        console.log("Sesi username tidak ditemukan.");
+    <?php endif; ?>
+</script>
+
+<?php
+    session_start();
+    if (isset($_SESSION['success'])) {
+        echo "
+            <script>
+            console.log('SweetAlert2 dipanggil');
+                Swal.fire({
+                    title: 'Berhasil',
+                    text: '" . $_SESSION['success'] . "',
+                    icon: 'success',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            </script>
+        ";
+        unset($_SESSION['error']);
+    }
+    ?>
 
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

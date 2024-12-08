@@ -22,6 +22,7 @@
       rel="stylesheet"
     />
     <link href="css/page.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
 
   <body class="bg-gradient-success">
@@ -83,9 +84,26 @@
         </div>
       </div>
     </div>
+    <?php
+    session_start();
+    if (isset($_SESSION['error'])) {
+        echo "
+            <script>
+            console.log('SweetAlert2 dipanggil');
+                Swal.fire({
+                    title: 'Error',
+                    text: '" . $_SESSION['error'] . "',
+                    icon: 'error',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            </script>
+        ";
+        unset($_SESSION['error']);
+    }
+    ?>
 
     <script src="vendor/jquery/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
     <script src="vendor/jquery-easing/jquery.easing.min.js"></script>
     <script src="js/sb-admin-2.min.js"></script>

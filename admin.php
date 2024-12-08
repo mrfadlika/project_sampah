@@ -1,3 +1,9 @@
+<?php
+session_start();
+include 'api/check_sesi.php';
+include 'api/db_check.php';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,6 +20,7 @@
     <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link href="css/page.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -30,52 +37,16 @@
             <hr class="sidebar-divider my-6" style="margin-top: 60px;">
 
             <li class="nav-item dropdown no-arrow">
-                <span class="text-white"><h6 style="text-align: center;">Nama Orang</h6></span>
+                <span class="text-white"><h6 style="text-align: center;"><?php echo $row['nama'] ?></h6></span>
                 <a class="nav-link collapsed d-flex align-items-center justify-content-center p-0" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseTwo">
                     <div style="text-align: center;">
-                        <span><p class="my-2 mr-2 mb-2">Sekolah</p></span>
+                        <span><p class="my-2 mr-2 mb-2"><?php echo $row['role'] ?></p></span>
                     </div>
                 </a>                
                 <div id="collapseOne" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="">Profile</a>
-                        <a class="collapse-item" href="">Logout</a>
-                    </div>
-                </div>
-            </li>
-
-            <hr class="sidebar-divider">
-
-            <div class="sidebar-heading">
-                Dashboard
-            </div>
-
-            <li class="nav-item">
-                <a class="nav-link" href="index.html">
-                    <i class="fas fa-fw fa-tachometer-alt"></i>
-                    <span>Dashboard</span></a>
-            </li>
-
-            <hr class="sidebar-divider">
-
-            <div class="sidebar-heading">
-                Form Pelaporan
-            </div>
-
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                    aria-expanded="true" aria-controls="collapseTwo">
-                    <i class="fas fa-fw fa-cog"></i>
-                    <span>Laporan User</span>
-                </a>
-                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded ">
-                        <h6 class="collapse-header">Pilih Jenis Laporan :</h6>
-                        <a class="collapse-item" href="pembatasan_penimbulan_sampah.html">Pembatasan Penimbulan <br>Sampah</a>
-                        <a class="collapse-item" href="pemanfaatan_sampah.html">Pemanfaatan Sampah</a>
-                        <a class="collapse-item" href="daur_ulang_sampa.html">Daur Ulang Sampah</a>
-                        <a class="collapse-item" href="bank_sampah.html">Bank Sampah</a>
+                        <a class="collapse-item" href="admin_profile.php">Profile</a>
+                        <a class="collapse-item" href="logout.php">Logout</a>
                     </div>
                 </div>
             </li>
@@ -87,9 +58,15 @@
             </div>
 
             <li class="nav-item active">
-                <a class="nav-link" href="admin.html">
-                    <i class="fas fa-fw fa-table"></i>
+                <a class="nav-link" href="admin.php">
+                    <i class="fas fa-fw fa-plus"></i>
                     <span>Tambah User</span></a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="tables.php">
+                    <i class="fas fa-fw fa-table"></i>
+                    <span>Table User</span></a>
             </li>
 
             <hr class="sidebar-divider d-none d-md-block">
@@ -199,32 +176,62 @@
                         <h1 class="h3 mb-0 text-gray-800">Admin Pages</h1>
                     </div>
                     <div class="container-fluid py-4">
-                        <div class="card shadow-lg mb-5">
+                        <div class="card shadow mb-5">
                             <div class="card-header text-center bg-success text-white">
                                 <h4 class="mb-0">Form Tambah User</h4>
                             </div>
                             <div class="card-body">
-                                <form id="userForm">
+                                <form id="add_user" action="api/add_user.php" method="post">
                                     <div class="mb-4">
-                                        <label for="namaUser" class="form-label fw-semibold">Nama User</label>
-                                        <input type="text" class="form-control form-control-lg" id="namaUser" placeholder="Masukkan nama user" required>
+                                        <label for="nama" class="form-label fw-semibold">Nama</label>
+                                        <input type="text" class="form-control" id="nama" name="nama" placeholder="Input Nama" required>
                                     </div>
                     
                                     <div class="mb-4">
-                                        <label for="emailUser" class="form-label fw-semibold">Email User</label>
-                                        <input type="email" class="form-control form-control-lg" id="emailUser" placeholder="Masukkan email user" required>
+                                        <label for="email" class="form-label fw-semibold">Email</label>
+                                        <input type="email" class="form-control" id="email" name="email" placeholder="Input Email" required>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label for="nomor_telp" class="form-label fw-semibold">Nomor HP</l  abel>
+                                        <input type="phonenumber" class="form-control" id="nomor_telp" name="nomor_telp" placeholder="Input Nomor HP" required>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <label for="username" class="form-label fw-semibold">Username</label>
+                                        <input type="username" class="form-control" id="username" name="username" placeholder="Input Username" required>
+                                        <p class="text-danger" style="margin-top: 5px; margin: 0px">Masukkan username dengan menggabungkan karakter (tanpa spasi)</p>
+                                        <p class="text-danger" style="margin-top: 5px; margin: 0px">*Gunakan awalan admin untuk membuat username admin, contoh: admin_ashar</p>
+                                        <p class="text-danger" style="margin-top: 5px; margin: 0px">*Gunakan awalan bank_sampah untuk membuat username bank sampah, contoh: bank_sampah_ashar</p>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="password" class="form-label fw-semibold">Password</label>
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="Input Password" required>
                                     </div>
                     
     
                                     <div class="mb-4">
-                                        <label for="roleUser" class="form-label fw-semibold">Role</label>
-                                        <select class="form-select form-select-lg" id="roleUser" required>
+                                        <label for="role" class="form-label fw-semibold">Role</label>
+                                        <select class="form-select costum-select" id="role" name="role" required>
                                             <option value="" disabled selected>Pilih lokasi user</option>
-                                            <option value="sekolah">SEKOLAH</option>
-                                            <option value="perguruan tinggi">PERGURUAN TINGGI</option>
-                                            <option value="perkantoran">PERKANTORAN</option>
-                                            <option value="pasar">PASAR</option>
-                                            <option value="pondok pesantren">PONDOK PESANTREN</option>
+                                            <option value="Sekolah">SEKOLAH</option>
+                                            <option value="Perguruan Tinggi">PERGURUAN TINGGI</option>
+                                            <option value="Pondok Pesantren">PONDOK PESANTREN</option>
+                                            <option value="Perkantoran">PERKANTORAN</option>
+                                            <option value="Pasar">PASAR</option>
+                                            <option value="Rumah Sakit/Puskesmas">RS/PUSKESMAS</option>
+                                            <option value="Resto">RUMAH MAKAN/RESTO</option>
+                                            <option value="Industri">INDUSTRI</option>
+                                            <option value="Lapas">LAPAS</option>
+                                            <option value="Hotel">PENGINAPAN/HOTEL/WISMA</option>
+                                            <option value="Terminal">TERMINAL</option>
+                                            <option value="Pelabuhan">PELABUHAN PENUMPANG</option>
+                                            <option value="Tempat Wisata">TEMPAT WISATA</option>
+                                            <option value="Taman Kota/Hutan Kota">TAMAN KOTA/HUTAN KOTA</option>
+                                            <option value="Pemukiman">PEMUKIMAN</option>
+                                            <option value="Ritel Modern">RITEL MODERN</option>
+                                            <option value="ADMIN">ADMIN</option>
                                         </select>
                                     </div>
                     
@@ -235,96 +242,8 @@
                             </div>
                         </div>
                     
-                        <div class="card shadow-lg">
-                            <div class="card-header text-center bg-success text-white">
-                                <h4 class="mb-0">Daftar User</h4>
-                            </div>
-                            <div class="card-body">
-                                <table class="table table-striped table-hover">
-                                    <thead>
-                                        <tr class="text-center">
-                                            <th>No</th>
-                                            <th>Nama</th>
-                                            <th>Email</th>
-                                            <th>Role</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="userTableBody">
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
                     </div>
                     
-                    <script>
-                        let users = [];
-                        let userId = 0;
-                    
-                        document.getElementById('userForm').addEventListener('submit', function (e) {
-                            e.preventDefault();
-                    
-                            const namaUser = document.getElementById('namaUser').value;
-                            const emailUser = document.getElementById('emailUser').value;
-                            const roleUser = document.getElementById('roleUser').value;
-                    
-                            users.push({ id: ++userId, nama: namaUser, email: emailUser, role: roleUser });
-                    
-                            this.reset();
-                    
-                            renderUserTable();
-                        });
-                    
-                        function renderUserTable() {
-                            const userTableBody = document.getElementById('userTableBody');
-                            userTableBody.innerHTML = '';
-                    
-                            users.forEach((user, index) => {
-                                userTableBody.innerHTML += `
-                                    <tr class="text-center">
-                                        <td>${index + 1}</td>
-                                        <td>${user.nama}</td>
-                                        <td>${user.email}</td>
-                                        <td>${user.role}</td>
-                                        <td>
-                                            <button class="btn btn-info btn-sm me-1" onclick="viewUser(${user.id})">View</button>
-                                            <button class="btn btn-warning btn-sm me-1" onclick="editUser(${user.id})">Edit</button>
-                                            <button class="btn btn-danger btn-sm" onclick="deleteUser(${user.id})">Delete</button>
-                                        </td>
-                                    </tr>
-                                `;
-                            });
-                        }
-                    
-                        function viewUser(id) {
-                            const user = users.find(u => u.id === id);
-                            alert(`Nama: ${user.nama}\nEmail: ${user.email}\nRole: ${user.role}`);
-                        }
-                    
-                        function editUser(id) {
-                            const user = users.find(u => u.id === id);
-                            const namaBaru = prompt('Masukkan nama baru:', user.nama);
-                            const emailBaru = prompt('Masukkan email baru:', user.email);
-                            const roleBaru = prompt('Masukkan role baru:', user.role);
-                    
-                            if (namaBaru && emailBaru && roleBaru) {
-                                user.nama = namaBaru;
-                                user.email = emailBaru;
-                                user.role = roleBaru;
-                    
-                                renderUserTable();
-                            } else {
-                                alert('Edit dibatalkan.');
-                            }
-                        }
-                    
-                        function deleteUser(id) {
-                            if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
-                                users = users.filter(u => u.id !== id);
-                                renderUserTable();
-                            }
-                        }
-                    </script>
                     
                 </div>
             </div>
@@ -335,24 +254,24 @@
         <i class="fas fa-angle-up"></i>
     </a>
 
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
+    <?php
+    session_start();
+    if (isset($_SESSION['success'])) {
+        echo "
+            <script>
+            console.log('SweetAlert2 dipanggil');
+                Swal.fire({
+                    title: 'Berhasil',
+                    text: '" . $_SESSION['success'] . "',
+                    icon: 'success',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
+            </script>
+        ";
+        unset($_SESSION['error']);
+    }
+    ?>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
@@ -362,25 +281,6 @@
     <script src="vendor/chart.js/Chart.min.js"></script>
     <script src="js/demo/chart-area-demo.js"></script>
     <script src="js/demo/chart-pie-demo.js"></script>
-
-    <script>
-        function toggleFormFields() {
-            const jenisSampah = document.getElementById('jenisSampah').value;
-            const formAnorganik = document.getElementById('formAnorganik');
-            const formOrganik = document.getElementById('formOrganik');
-    
-            if (jenisSampah === 'anorganik') {
-                formAnorganik.classList.remove('d-none');
-                formOrganik.classList.add('d-none');
-            } else if (jenisSampah === 'organik') {
-                formOrganik.classList.remove('d-none');
-                formAnorganik.classList.add('d-none');
-            } else {
-                formAnorganik.classList.add('d-none');
-                formOrganik.classList.add('d-none');
-            }
-        }
-    </script>
 
 </body>
 
