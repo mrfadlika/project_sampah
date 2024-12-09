@@ -77,10 +77,9 @@ include 'api/db_check.php';
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Pilih Jenis Laporan :</h6>
-                        <a class="collapse-item" href="pembatasan_penimbulan_sampah.html">Pembatasan Penimbulan <br>Sampah</a>
-                        <a class="collapse-item" href="pemanfaatan_sampah.html">Pemanfaatan Sampah</a>
-                        <a class="collapse-item" href="daur_ulang_sampa.html">Daur Ulang Sampah</a>
-                        <a class="collapse-item" href="bank_sampah.html">Bank Sampah</a>
+                        <a class="collapse-item" href="pembatasan_penimbulan_sampah.php">Pembatasan Penimbulan <br>Sampah</a>
+                        <a class="collapse-item" href="pemanfaatan_sampah.php">Pemanfaatan Sampah</a>
+                        <a class="collapse-item" href="daur_ulang_sampah.php">Daur Ulang Sampah</a>
                     </div>
                 </div>
             </li>
@@ -245,9 +244,7 @@ include 'api/db_check.php';
                                     <td><?php echo date('d F Y', strtotime($row['created_at'])); ?></td>
                                 </tr>
                             </table>
-                            <a href="edit_profile.php" class="btn btn-success btn-sm mt-2">
-                                <i class="fas fa-edit"></i> Edit Profil
-                            </a>
+                            <p>Hubungi administrator jika terdapat data yang salah</p>
                         </div>
                     </div>
                 </div>

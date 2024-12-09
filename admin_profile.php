@@ -217,9 +217,6 @@ include 'api/db_check.php';
                                     <td><?php echo date('d F Y', strtotime($row['created_at'])); ?></td>
                                 </tr>
                             </table>
-                            <a href="edit_profile.php" class="btn btn-success btn-sm mt-2">
-                                <i class="fas fa-edit"></i> Edit Profil
-                            </a>
                         </div>
                     </div>
                 </div>

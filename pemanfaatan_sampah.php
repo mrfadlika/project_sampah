@@ -1,3 +1,31 @@
+<?php
+session_start();
+include 'api/check_sesi.php';
+include 'api/db_check.php';
+
+if (isset($_SESSION['status']) && isset($_SESSION['status_code'])) {
+  $status = $_SESSION['status'];
+  $status_code = $_SESSION['status_code'];
+
+  echo "
+  <script>
+      document.addEventListener('DOMContentLoaded', function() {
+          Swal.fire({
+              icon: '$status_code',
+              title: '$status',
+              showConfirmButton: true,
+              timer: 3000
+          });
+      });
+  </script>
+  ";
+
+  unset($_SESSION['status']);
+  unset($_SESSION['status_code']);
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -22,6 +50,8 @@
       rel="stylesheet"
     />
     <link href="css/page.min.css" rel="stylesheet" />
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
 
   <body id="page-top">
@@ -44,7 +74,7 @@
 
         <li class="nav-item dropdown no-arrow">
           <span class="text-white"
-            ><h6 style="text-align: center">Nama Orang</h6></span
+            ><h6 style="text-align: center"><?php echo $row['nama'] ?></h6></span
           >
           <a
             class="nav-link collapsed d-flex align-items-center justify-content-center p-0"
@@ -55,7 +85,7 @@
             aria-controls="collapseTwo"
           >
             <div style="text-align: center">
-              <span><p class="my-2 mr-2 mb-2">Sekolah</p></span>
+              <span><p class="my-2 mr-2 mb-2"><?php echo $row['role'] ?></p></span>
             </div>
           </a>
           <div
@@ -65,9 +95,8 @@
             data-parent="#accordionSidebar"
           >
             <div class="bg-white py-2 collapse-inner rounded">
-              <h6 class="collapse-header">Custom Components:</h6>
-              <a class="collapse-item" href="">Profile</a>
-              <a class="collapse-item" href="">Logout</a>
+              <a class="collapse-item" href="profile.php">Profile</a>
+              <a class="collapse-item" href="logout.php">Logout</a>
             </div>
           </div>
         </li>
@@ -107,32 +136,31 @@
           >
             <div class="bg-white py-2 collapse-inner rounded">
               <h6 class="collapse-header">Pilih Jenis Laporan :</h6>
-              <a class="collapse-item" href="pembatasan_penimbulan_sampah.html"
+              <a class="collapse-item" href="pembatasan_penimbulan_sampah.php"
                 >Pembatasan Penimbulan <br />Sampah</a
               >
-              <a class="collapse-item" href="pemanfaatan_sampah.html"
+              <a class="collapse-item" href="pemanfaatan_sampah.php"
                 >Pemanfaatan Sampah</a
               >
-              <a class="collapse-item" href="daur_ulang_sampa.html"
+              <a class="collapse-item" href="daur_ulang_sampah.php"
                 >Daur Ulang Sampah</a
               >
-              <a class="collapse-item" href="bank_sampah.html">Bank Sampah</a>
             </div>
           </div>
         </li>
 
-        <hr class="sidebar-divider" />
+        <!-- <hr class="sidebar-divider" />
 
         <div class="sidebar-heading">Halaman Admin</div>
 
         <li class="nav-item">
-          <a class="nav-link" href="admin.html">
+          <a class="nav-link" href="admin.php">
             <i class="fas fa-fw fa-table"></i>
             <span>Tambah User</span></a
           >
         </li>
 
-        <hr class="sidebar-divider d-none d-md-block" />
+        <hr class="sidebar-divider d-none d-md-block" /> -->
       </ul>
       <!-- Penutup Sidebar -->
 
@@ -290,12 +318,12 @@
             <div
               class="container-fluid d-flex justify-content-center align-items-center vh-20"
             >
-              <div class="card shadow-lg" style="width: 100%; max-width: 800px">
+              <div class="card shadow" style="width: 100%; max-width: 800px">
                 <div class="card-header text-center bg-success text-white">
                   <h4 class="mb-0">Pemanfaatan Sampah</h4>
                 </div>
                 <div class="card-body">
-                  <form>
+                  <form action="api/db_pemanfaatan.php" method="post" enctype="multipart/form-data">
                     <!-- Nama Tempat -->
                     <div class="mb-4">
                       <label for="namaTempat" class="form-label fw-semibold"
@@ -303,10 +331,10 @@
                       >
                       <input
                         type="text"
-                        class="form-control form-control-lg"
+                        class="form-control"
                         id="namaTempat"
-                        value="Nama Tempat Akun Anda"
-                        readonly
+                        value="<?php echo $row['role'] ?>"
+                        disabled
                       />
                     </div>
 
@@ -316,8 +344,9 @@
                         >Jenis Sampah</label
                       >
                       <select
-                        class="form-select form-select-lg"
+                        class="form-select"
                         id="jenisSampah"
+                        name="jenis_sampah"
                         required
                         onchange="toggleFormFields()"
                       >
@@ -336,8 +365,9 @@
                       >
                       <input
                         type="date"
-                        class="form-control form-control-lg"
+                        class="form-control"
                         id="tanggal"
+                        name="tanggal"
                         required
                       />
                     </div>
@@ -345,14 +375,16 @@
                     <!-- Form Anorganik -->
                     <div id="formAnorganik" class="d-none">
                       <h5 class="fw-semibold">Anorganik (KG)</h5>
+                      <p>Pemanfaatan kembali sampah anorganik dapat dilakukan dengan cara menggunakan bahan baku yang dapat digunakan ulang misalnya dengan membuat kerajinan, tempat pensil, wariah tanaman, tempat sampah, wadah tanaman, dll.</p>
                       <div class="mb-3">
                         <label for="botolKaca" class="form-label"
                           >Botol Kaca</label
                         >
                         <input
                           type="number"
-                          class="form-control form-control-lg"
+                          class="form-control"
                           id="botolKaca"
+                          name="botol_kaca"
                           placeholder="Masukkan jumlah (KG)"
                         />
                       </div>
@@ -362,8 +394,9 @@
                         >
                         <input
                           type="number"
-                          class="form-control form-control-lg"
+                          class="form-control"
                           id="kemasanPlastik"
+                          name="kemasan_plastik"
                           placeholder="Masukkan jumlah (KG)"
                         />
                       </div>
@@ -373,8 +406,9 @@
                         >
                         <input
                           type="number"
-                          class="form-control form-control-lg"
+                          class="form-control"
                           id="kalengAlumunium"
+                          name="kaleng_alumunium"
                           placeholder="Masukkan jumlah (KG)"
                         />
                       </div>
@@ -384,8 +418,9 @@
                         >
                         <input
                           type="number"
-                          class="form-control form-control-lg"
+                          class="form-control"
                           id="kemasanKalengCat"
+                          name="kemasan_kaleng_cat"
                           placeholder="Masukkan jumlah (KG)"
                         />
                       </div>
@@ -395,8 +430,9 @@
                         >
                         <input
                           type="number"
-                          class="form-control form-control-lg"
+                          class="form-control"
                           id="banBekas"
+                          name="ban_bekas"
                           placeholder="Masukkan jumlah (KG)"
                         />
                       </div>
@@ -405,14 +441,16 @@
                     <!-- Form Organik -->
                     <div id="formOrganik" class="d-none">
                       <h5 class="fw-semibold">Organik (KG)</h5>
+                      <p>Pemanfaatan kembali sampah organik dapat dilakukan dengan cara dikumpulkan dan digunakan untuk pakan ternak</p>
                       <div class="mb-3">
                         <label for="sisaMakanan" class="form-label"
                           >Sisa Makanan</label
                         >
                         <input
                           type="number"
-                          class="form-control form-control-lg"
+                          class="form-control"
                           id="sisaMakanan"
+                          name="sisa_makanan"
                           placeholder="Masukkan jumlah (KG)"
                         />
                       </div>
@@ -424,8 +462,9 @@
                       >
                       <input
                         type="file"
-                        class="form-control form-control-lg"
+                        class="form-control"
                         id="uploadFoto"
+                        name="uploadFoto"
                         accept=".jpg, .jpeg, .png"
                         required
                       />

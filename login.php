@@ -33,6 +33,7 @@
             <div class="card-body p-0">
               <div class="p-5">
                 <div class="text-center">
+                  <img src="https://mtek3d.com/wp-content/uploads/2018/01/image-placeholder-500x500-300x300.jpg" alt="placeholder" style="width: 100px; height: 100px">
                   <h1 class="h4 text-gray-900 mb-4">Selamat datang</h1>
                 </div>
                 <form class="user" action="api/auth.php" method="post">
@@ -76,7 +77,7 @@
                 </form>
                 <hr />
                 <div class="text-center">
-                  <a class="small" href="#">Lupa Password</a>
+                  <a class="small" href="#">Dikelola Oleh ...</a>
                 </div>
               </div>
             </div>

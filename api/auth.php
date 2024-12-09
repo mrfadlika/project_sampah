@@ -25,8 +25,10 @@ try {
 
                 if (str_starts_with($username, "admin")) {
                     header('Location: ../admin.php');
+                    exit();
                 } else {
                     header('Location: ../index.php');
+                    exit();
                 }
                 exit();
             } else {

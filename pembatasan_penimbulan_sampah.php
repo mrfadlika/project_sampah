@@ -1,3 +1,31 @@
+<?php
+session_start();
+include 'api/db_check.php';
+include 'api/check_sesi.php';
+
+if (isset($_SESSION['status']) && isset($_SESSION['status_code'])) {
+    $status = $_SESSION['status'];
+    $status_code = $_SESSION['status_code'];
+
+    echo "
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            Swal.fire({
+                icon: '$status_code',
+                title: '$status',
+                showConfirmButton: true,
+                timer: 3000
+            });
+        });
+    </script>
+    ";
+
+    unset($_SESSION['status']);
+    unset($_SESSION['status_code']);
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -15,6 +43,8 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
     <link href="css/page.min.css" rel="stylesheet">
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 </head>
 
 <body id="page-top">
@@ -30,17 +60,16 @@
             <hr class="sidebar-divider my-6" style="margin-top: 60px;">
 
             <li class="nav-item dropdown no-arrow">
-                <span class="text-white"><h6 style="text-align: center;">Nama Orang</h6></span>
+                <span class="text-white"><h6 style="text-align: center;"><?php echo $row['nama'] ?></h6></span>
                 <a class="nav-link collapsed d-flex align-items-center justify-content-center p-0" href="#" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseTwo">
                     <div style="text-align: center;">
-                        <span><p class="my-2 mr-2 mb-2">Sekolah</p></span>
+                        <span><p class="my-2 mr-2 mb-2"><?php echo $row['role'] ?></p></span>
                     </div>
                 </a>                
                 <div id="collapseOne" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Custom Components:</h6>
-                        <a class="collapse-item" href="">Profile</a>
-                        <a class="collapse-item" href="">Logout</a>
+                        <a class="collapse-item" href="profile.php">Profile</a>
+                        <a class="collapse-item" href="logout.php">Logout</a>
                     </div>
                 </div>
             </li>
@@ -72,15 +101,14 @@
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded ">
                         <h6 class="collapse-header">Pilih Jenis Laporan :</h6>
-                        <a class="collapse-item" href="pembatasan_penimbulan_sampah.html">Pembatasan Penimbulan <br>Sampah</a>
-                        <a class="collapse-item" href="pemanfaatan_sampah.html">Pemanfaatan Sampah</a>
-                        <a class="collapse-item" href="daur_ulang_sampa.html">Daur Ulang Sampah</a>
-                        <a class="collapse-item" href="bank_sampah.html">Bank Sampah</a>
+                        <a class="collapse-item" href="pembatasan_penimbulan_sampah.php">Pembatasan Penimbulan <br>Sampah</a>
+                        <a class="collapse-item" href="pemanfaatan_sampah.php">Pemanfaatan Sampah</a>
+                        <a class="collapse-item" href="daur_ulang_sampah.php">Daur Ulang Sampah</a>
                     </div>
                 </div>
             </li>
 
-            <hr class="sidebar-divider">
+            <!-- <hr class="sidebar-divider">
 
             <div class="sidebar-heading">
                 Halaman Admin
@@ -92,7 +120,7 @@
                     <span>Tambah User</span></a>
             </li>
 
-            <hr class="sidebar-divider d-none d-md-block">
+            <hr class="sidebar-divider d-none d-md-block"> -->
         </ul>
         <!-- Penutup Sidebar -->
 
@@ -223,30 +251,33 @@
                     <div class="container-fluid d-flex justify-content-center align-items-center vh-20">
                         <div class="card shadow-lg" style="width: 100%; max-width: 600px;">
                             <div class="card-header text-center bg-success text-white">
-                                <h4 class="mb-0">Pembatsan Penimbulan Sampah</h4>
+                                <h4 class="mb-0">Pembatasan Penimbulan Sampah</h4>
                             </div>
                             <div class="card-body">
-                                <form>
+                                <form action="api/db_pembatasan_penimbulan_sampah.php" method="post">
                                     <div class="mb-3">
-                                        <label for="namaTempat" class="form-label">Nama Tempat</label>
-                                        <input type="text" class="form-control" id="namaTempat" placeholder="Nama tempat sesuai akun" required>
+                                        <label for="role" class="form-label">Nama Tempat</label>
+                                        <input type="text" class="form-control" id="role" name="role" value="<?php echo $row['role'] ?>" placeholder="Nama tempat sesuai akun" disabled>
                                     </div>
                                     <div class="mb-3">
                                         <label for="tanggal" class="form-label">Tanggal</label>
-                                        <input type="date" class="form-control" id="tanggal" required>
+                                        <input type="date" class="form-control" id="tanggal" name="tanggal" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="sampahSebelum" class="form-label">Jumlah Timbulan Sampah Sebelum Ada Pembatasan (KG)</label>
-                                        <input type="number" class="form-control" id="sampahSebelum" placeholder="Masukkan jumlah (KG)" required>
+                                        <input type="number" class="form-control" id="sampahSebelum" name="sampahSebelum" placeholder="Masukkan jumlah (KG)" required>
                                     </div>
                                     <div class="mb-3">
                                         <label for="sampahSesudah" class="form-label">Jumlah Timbulan Sampah Sesudah Ada Pembatasan (KG)</label>
-                                        <input type="number" class="form-control" id="sampahSesudah" placeholder="Masukkan jumlah" required>
+                                        <input type="number" class="form-control" id="sampahSesudah" name="sampahSesudah" placeholder="Masukkan jumlah (KG)" required>
                                     </div>
                                     <div class="d-grid">
                                         <button type="submit" class="btn btn-primary">Submit</button>
                                     </div>
                                 </form>
+                                <p style="margin-top: 50px">Pembatasan timbulan sampah dapat dilakukan dengan:</p>
+                                <p>- Menggunakan produk, kemasan produk, dan/atau wadah yang mudah diurai oleh proses alam dan yang menimbulkan sampah sesedikit mungkin.</p>
+                                <p>- Menggunakan produk dari bahan yang dapat digunakan berulang kali.</p>
                             </div>
                         </div>
                     </div>
@@ -259,25 +290,6 @@
     <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a>
-
-    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">×</span>
-                    </button>
-                </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

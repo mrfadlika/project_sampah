@@ -255,11 +255,13 @@ include 'api/db_check.php';
     </a>
 
     <?php
-    session_start();
+session_start();
+
+if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'login.php') !== false) {
     if (isset($_SESSION['success'])) {
         echo "
             <script>
-            console.log('SweetAlert2 dipanggil');
+                console.log('SweetAlert2 dipanggil');
                 Swal.fire({
                     title: 'Berhasil',
                     text: '" . $_SESSION['success'] . "',
@@ -269,9 +271,18 @@ include 'api/db_check.php';
                 });
             </script>
         ";
-        unset($_SESSION['error']);
+        unset($_SESSION['success']);
     }
-    ?>
+} else {
+    echo "
+        <script>
+            console.log('Akses tidak sah.');
+        </script>
+    ";
+}
+?>
+
+
 
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>

@@ -2,6 +2,90 @@
 session_start();
 include 'api/check_sesi.php';
 include 'api/db_check.php';
+include 'api/db_connection.php';
+
+$sesiBerlangsung = $_SESSION['username'];
+
+$querySelector1 = "SELECT 
+                      SUM(COALESCE(botol_kaca, 0)) AS total_botol_kaca,
+                      SUM(COALESCE(kemasan_plastik, 0)) AS total_kemasan_plastik,
+                      SUM(COALESCE(kaleng_alumunium, 0)) AS total_kaleng_alumunium,
+                      SUM(COALESCE(kemasan_kaleng_cat, 0)) AS total_kemasan_kaleng_cat,
+                      SUM(COALESCE(ban_bekas, 0)) AS total_ban_bekas,
+                      SUM(COALESCE(sisa_makanan, 0)) AS total_sisa_makanan
+                  FROM pemanfaatan
+                  WHERE nama_tempat = '$sesiBerlangsung'";
+
+$querySelector2 = "SELECT 
+                      SUM(sampah_sebelum) AS total_sebelum,
+                      SUM(sampah_sesudah) AS total_sesudah
+                  FROM pembatasan
+                  WHERE username = '$sesiBerlangsung'";
+
+$querySelector3 = "SELECT 
+                    sum(kertas) AS total_kertas, 
+                    sum(karton) AS total_karton, 
+                    sum(botol_plastik) AS total_botol_plastik, 
+                    sum(besi) AS total_besi,
+                    sum(aluminium) AS total_aluminium,
+                    sum(lainnya_anorganik) AS total_lainnya_anorganik,
+                    sum(pengomposan) AS total_pengomposan,
+                    sum(eco_enzim) AS total_eco_enzim,
+                    sum(lainnya_organik) AS total_lainnya_organik
+                FROM daur_ulang
+                WHERE username = '$sesiBerlangsung'";
+
+$result1 = $conn->query($querySelector1);
+if($result1 && $result1->num_rows > 0) {
+    $data1 = $result1->fetch_assoc();
+} else {
+    $data1 = [
+        'total_botol_kaca' => 0,
+        'total_kemasan_plastik' => 0,
+        'total_kaleng_alumunium' => 0,
+        'total_kemasan_kaleng_cat' => 0,
+        'total_ban_bekas' => 0,
+        'total_sisa_makanan' => 0
+    ];
+}
+
+// Menjalankan query kedua
+$result2 = $conn->query($querySelector2);
+if($result2 && $result2->num_rows > 0) {
+    $data2 = $result2->fetch_assoc();
+} else {
+    $data2 = [
+        'total_sebelum' => 0,
+        'total_sesudah' => 0
+    ];
+}
+
+$result3 = $conn->query($querySelector3);
+if($result3 && $result3->num_rows > 0) {
+    $data3 = $result3->fetch_assoc();
+} else {
+    $data3 = [
+        'total_kertas' => 0,
+        'total_karton' => 0,
+        'total_botol_plastik' => 0,
+        'total_besi' => 0,
+        'total_aluminium' => 0,
+        'total_lainnya_anorganik' => 0,
+        'total_pengomposan' => 0,
+        'total_eco_enzim' => 0,
+        'total_lainnya_organik' => 0
+    ];
+}
+
+$conn->close();
+
+$total_sampah = $data1['total_botol_kaca'] + $data1['total_kemasan_plastik'] + 
+                $data1['total_kaleng_alumunium'] + $data1['total_kemasan_kaleng_cat'] +
+                $data1['total_ban_bekas'] + $data1['total_sisa_makanan'];
+
+$total_daur_ulang_anorganik = $data3['total_kertas'] + $data3['total_karton'] + $data3['total_botol_plastik'] + $data3['total_besi'] + $data3['total_aluminium'] + $data3['total_lainnya_anorganik'];
+$total_daur_ulang_organik =  $data3['total_pengomposan'] + $data3['total_eco_enzim'] + $data3['total_lainnya_organik'];
+
 ?>
 
 
@@ -77,27 +161,26 @@ include 'api/db_check.php';
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <h6 class="collapse-header">Pilih Jenis Laporan :</h6>
-                        <a class="collapse-item" href="pembatasan_penimbulan_sampah.html">Pembatasan Penimbulan <br>Sampah</a>
-                        <a class="collapse-item" href="pemanfaatan_sampah.html">Pemanfaatan Sampah</a>
-                        <a class="collapse-item" href="daur_ulang_sampa.html">Daur Ulang Sampah</a>
-                        <a class="collapse-item" href="bank_sampah.html">Bank Sampah</a>
+                        <a class="collapse-item" href="pembatasan_penimbulan_sampah.php">Pembatasan Penimbulan <br>Sampah</a>
+                        <a class="collapse-item" href="pemanfaatan_sampah.php">Pemanfaatan Sampah</a>
+                        <a class="collapse-item" href="daur_ulang_sampah.php">Daur Ulang Sampah</a>
                     </div>
                 </div>
             </li>
 
-            <!-- <hr class="sidebar-divider">
+            <hr class="sidebar-divider">
 
             <div class="sidebar-heading">
-                Halaman Admin
+                Hasil Laporan
             </div>
 
             <li class="nav-item">
-                <a class="nav-link" href="admin.html">
+                <a class="nav-link" href="kelola_data_user.php">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Tambah User</span></a>
+                    <span>Kelola Data</span></a>
             </li>
 
-            <hr class="sidebar-divider d-none d-md-block"> -->
+            <hr class="sidebar-divider d-none d-md-block">
         </ul>
         <!-- Penutup sidebar -->
 
@@ -202,7 +285,7 @@ include 'api/db_check.php';
 
                 <div class="container-fluid">
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
+                        <h1 class="h3 mb-0 text-gray-800">Data Persampahan</h1>
                     </div>
 
                     <div class="row">
@@ -214,7 +297,7 @@ include 'api/db_check.php';
                                             <div class=" font-weight-bold text-center text-primary text-uppercase mb-3">
                                                 Timbulan Sampah Sebelum Pembatasan
                                             </div>
-                                            <h1 class="text-center font-weight-bold mb-3">YYY</h1>
+                                            <h1 class="text-center font-weight-bold mb-3"><?= number_format($data2['total_sebelum']) ?></h1>
                                             <div class="text-center font-weight-bold text-primary text-uppercase">
                                                 Kilogram/Tahun
                                             </div>
@@ -233,7 +316,7 @@ include 'api/db_check.php';
                                             <div class=" font-weight-bold text-center text-success text-uppercase mb-3">
                                                 Timbulan Sampah Setelah Pembatasan
                                             </div>
-                                            <h1 class="text-center font-weight-bold mb-3">YYY</h1>
+                                            <h1 class="text-center font-weight-bold mb-3"><?= number_format($data2['total_sesudah']) ?></h1>
                                             <div class="text-center font-weight-bold text-success text-uppercase">
                                                 Kilogram/Tahun
                                             </div>
@@ -252,7 +335,7 @@ include 'api/db_check.php';
                                             <div class=" font-weight-bold text-center text-warning text-uppercase mb-4">
                                                 Pemanfaatan Kembali
                                             </div>
-                                            <h1 class="text-center font-weight-bold mb-4">YYY</h1>
+                                            <h1 class="text-center font-weight-bold mb-4"><?php echo $total_sampah ?></h1>
                                             <div class="text-center font-weight-bold text-warning text-uppercase">
                                                 Kilogram/Tahun
                                             </div>
@@ -269,9 +352,9 @@ include 'api/db_check.php';
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2 mt-2">
                                             <div class=" font-weight-bold text-center text-info text-uppercase mb-4">
-                                                Pendauran Ulang AnOrganik
+                                                Pendauran Ulang Anorganik
                                             </div>
-                                            <h1 class="text-center font-weight-bold mb-4">YYY</h1>
+                                            <h1 class="text-center font-weight-bold mb-4"><?php echo $total_daur_ulang_anorganik ?></h1>
                                             <div class="text-center font-weight-bold text-info text-uppercase">
                                                 Kilogram/Tahun
                                             </div>
@@ -290,7 +373,7 @@ include 'api/db_check.php';
                                             <div class=" font-weight-bold text-center text-primary text-uppercase mb-4">
                                                 Pendauran Ulang Organik
                                             </div>
-                                            <h1 class="text-center font-weight-bold mb-4">YYY</h1>
+                                            <h1 class="text-center font-weight-bold mb-4"><?php echo $total_daur_ulang_organik ?></h1>
                                             <div class="text-center font-weight-bold text-primary text-uppercase">
                                                 Kilogram/Tahun
                                             </div>
@@ -355,11 +438,13 @@ include 'api/db_check.php';
 </script>
 
 <?php
-    session_start();
+session_start();
+
+if (isset($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], 'login.php') !== false) {
     if (isset($_SESSION['success'])) {
         echo "
             <script>
-            console.log('SweetAlert2 dipanggil');
+                console.log('SweetAlert2 dipanggil');
                 Swal.fire({
                     title: 'Berhasil',
                     text: '" . $_SESSION['success'] . "',
@@ -369,9 +454,16 @@ include 'api/db_check.php';
                 });
             </script>
         ";
-        unset($_SESSION['error']);
+        unset($_SESSION['success']);
     }
-    ?>
+} else {
+    echo "
+        <script>
+            console.log('Akses tidak sah.');
+        </script>
+    ";
+}
+?>
 
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
