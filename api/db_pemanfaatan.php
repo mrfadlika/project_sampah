@@ -23,7 +23,7 @@ $target_file = $target_dir . basename($bukti);
 
 if (move_uploaded_file($_FILES['uploadFoto']['tmp_name'], $target_file)) {
     $stmt = $conn->prepare("INSERT INTO pemanfaatan 
-        (nama_tempat, jenis_sampah, botol_kaca, kemasan_plastik, kaleng_alumunium, kemasan_kaleng_cat, ban_bekas, sisa_makanan, tanggal, bukti) 
+        (username, jenis_sampah, botol_kaca, kemasan_plastik, kaleng_alumunium, kemasan_kaleng_cat, ban_bekas, sisa_makanan, tanggal, bukti) 
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     if (!$stmt) {
         die("Kesalahan pada prepare statement: " . $conn->error);

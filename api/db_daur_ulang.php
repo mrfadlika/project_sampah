@@ -5,6 +5,7 @@ include 'db_connection.php';
 $username = $_SESSION['username'];
 $jenis_sampah = $_POST['jenis_sampah'];
 $tanggal = $_POST['tanggal'];
+$bukti = $_FILES['uploadFoto']['name'];
 
 //Data untuk jenis sampah anorganik
 $kertas = isset($_POST['kertas']) && $_POST['kertas'] !== '' ? $_POST['kertas'] : 0; 
@@ -19,19 +20,33 @@ $pengomposan = isset($_POST['pengomposan']) && $_POST['pengomposan'] !== '' ? $_
 $eco_enzim = isset($_POST['eco_enzim']) && $_POST['eco_enzim'] !== '' ? $_POST['eco_enzim'] : 0; 
 $lainnya_organik = isset($_POST['lainnya_organik']) && $_POST['lainnya_organik'] !== '' ? $_POST['lainnya_organik'] : 0;
 
-$sql = "INSERT INTO daur_ulang (username, jenis_sampah, tanggal, kertas, karton, botol_plastik, besi, aluminium, lainnya_anorganik, pengomposan, eco_enzim, lainnya_organik) 
-        VALUES ('$username', '$jenis_sampah', '$tanggal', '$kertas', '$karton', '$botol_plastik', '$besi', '$aluminium', '$lainnya_anorganik', '$pengomposan', '$eco_enzim', '$lainnya_organik')";
+$target_dir = "../uploads/";
+$target_file = $target_dir . basename($bukti);
 
-if($conn->query($sql) === true) {
-    $_SESSION['status'] = "Data berhasil ditambahkan";
-    $_SESSION['status_code'] = "success";
+if(move_uploaded_file($_FILES['uploadFoto']['tmp_name'], $target_file)) {
+    $stmt = $conn->prepare("INSERT INTO daur_ulang (username, jenis_sampah, tanggal, kertas, karton, botol_plastik, besi, aluminium, lainnya_anorganik, pengomposan, eco_enzim, lainnya_organik, bukti) 
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)");
+    if(!$stmt) {
+        die("Kesalahan pada prepare statement: " . $conn->error);
+    }
+
+    $stmt->bind_param("sssssssssssss", $username, $jenis_sampah, $tanggal, $kertas, $karton, $botol_plastik, $besi, $aluminium, $lainnya_anorganik, $pengomposan, $eco_enzim, $lainnya_organik, $bukti);
+
+    if(!$stmt->execute()) {
+        $_SESSION['status'] = "Data gagal disimpan!";
+        $_SESSION['status_code'] = "error";
+    } else {
+        $_SESSION['status'] = "Data berhasil disimpan!";
+        $_SESSION['status_code'] = "success";
+    }
+    
+    $stmt->close();
 } else {
-    $_SESSION['status'] = "Data gagal ditambahkan: " . $conn->error;
+    $_SESSION['status'] = "Gagal mengunggah file!";
     $_SESSION['status_code'] = "error";
 }
 
 $conn->close();
-
 header("Location: ../daur_ulang_sampah.php");
 exit();
 

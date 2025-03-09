@@ -26,6 +26,9 @@ try {
                 if (str_starts_with($username, "admin")) {
                     header('Location: ../admin.php');
                     exit();
+                } elseif (str_starts_with($username, "bank_sampah")) {
+                    header('Location: ../bank_sampah.php');
+                    exit();
                 } else {
                     header('Location: ../index.php');
                     exit();

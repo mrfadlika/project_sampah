@@ -1,5 +1,4 @@
 <?php
-session_start();
 include 'api/check_sesi.php';
 include 'api/db_check.php';
 ?>
@@ -30,7 +29,7 @@ include 'api/db_check.php';
         <!-- Sidebar -->
         <ul class="navbar-nav bg-gradient-success sidebar sidebar-dark accordion" id="accordionSidebar">
 
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="admin.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="admin.php">
                 <div class="sidebar-brand-text mx-1" style="height: 1px;">SISTEM INFORMASI PENGELOLAAN SAMPAH</div>
             </a>
 
@@ -69,6 +68,18 @@ include 'api/db_check.php';
                     <span>Table User</span></a>
             </li>
 
+            <li class="nav-item">
+    <a class="nav-link" href="report_filter.php">
+        <i class="fas fa-fw fa-file-alt"></i>
+        <span>Report Data</span></a>
+    </li>
+
+        <li class="nav-item">
+    <a class="nav-link" href="form_export.php">
+        <i class="fas fa-fw fa-download"></i>
+        <span>Export Excel</span></a>
+</li>
+
             <hr class="sidebar-divider d-none d-md-block">
         </ul>
         <!-- Penutup Sidebar -->
@@ -79,94 +90,6 @@ include 'api/db_check.php';
                     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
                         <i class="fa fa-bars"></i>
                     </button>
-
-                    <ul class="navbar-nav ml-auto">
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell fa-fw"></i>
-                                <span class="badge badge-danger badge-counter">2</span>
-                            </a>
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Alerts Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 12, 2019</div>
-                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-success">
-                                            <i class="fas fa-donate text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 7, 2019</div>
-                                        $290.29 has been deposited into your account!
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                            </div>
-                        </li>
-
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-envelope fa-fw"></i>
-                                <span class="badge badge-danger badge-counter">1</span>
-                            </a>
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="messagesDropdown">
-                                <h6 class="dropdown-header">
-                                    Message Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div class="font-weight-bold">
-                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                            problem I've been having.</div>
-                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
-                                    </div>
-                                    <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
 
                 </nav>
                 <!-- Tutup topbar -->
@@ -203,6 +126,7 @@ include 'api/db_check.php';
                                         <p class="text-danger" style="margin-top: 5px; margin: 0px">Masukkan username dengan menggabungkan karakter (tanpa spasi)</p>
                                         <p class="text-danger" style="margin-top: 5px; margin: 0px">*Gunakan awalan admin untuk membuat username admin, contoh: admin_ashar</p>
                                         <p class="text-danger" style="margin-top: 5px; margin: 0px">*Gunakan awalan bank_sampah untuk membuat username bank sampah, contoh: bank_sampah_ashar</p>
+                                        <p class="text-danger" style="margin-top: 5px; margin: 0px">*Untuk pengguna selain admin dan bank sampah username nya bebas tanpa menggunakan spasi</p>
                                     </div>
 
                                     <div class="mb-4">
@@ -220,7 +144,7 @@ include 'api/db_check.php';
                                             <option value="Pondok Pesantren">PONDOK PESANTREN</option>
                                             <option value="Perkantoran">PERKANTORAN</option>
                                             <option value="Pasar">PASAR</option>
-                                            <option value="Rumah Sakit/Puskesmas">RS/PUSKESMAS</option>
+                                            <option value="Rumah Sakit">RS/PUSKESMAS</option>
                                             <option value="Resto">RUMAH MAKAN/RESTO</option>
                                             <option value="Industri">INDUSTRI</option>
                                             <option value="Lapas">LAPAS</option>
@@ -228,11 +152,17 @@ include 'api/db_check.php';
                                             <option value="Terminal">TERMINAL</option>
                                             <option value="Pelabuhan">PELABUHAN PENUMPANG</option>
                                             <option value="Tempat Wisata">TEMPAT WISATA</option>
-                                            <option value="Taman Kota/Hutan Kota">TAMAN KOTA/HUTAN KOTA</option>
+                                            <option value="Taman Kota">TAMAN KOTA/HUTAN KOTA</option>
                                             <option value="Pemukiman">PEMUKIMAN</option>
                                             <option value="Ritel Modern">RITEL MODERN</option>
-                                            <option value="ADMIN">ADMIN</option>
+                                            <option value="Admin">ADMIN</option>
+                                            <option value="Bank Sampah">BANK SAMPAH</option>
                                         </select>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="lembaga" class="form-label fw-semibold">Nama Instansi</label>
+                                        <input type="text" class="form-control" id="lembaga" name="lembaga" placeholder="Input Nama Instansi" required>
                                     </div>
                     
                                     <div class="d-grid">

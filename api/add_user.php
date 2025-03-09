@@ -11,6 +11,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $input_password = $_POST["password"]; 
     $role = $_POST["role"];
     $nomor_telp = $_POST["nomor_telp"];
+    $lembaga = $_POST['lembaga'];
 
     include "db_connection.php";
 
@@ -18,9 +19,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         die("Connection failed: " . $conn->connect_error);
     }
 
-    $sql = "INSERT INTO users (nama, username, email, password, role, nomor_telp) VALUES (?, ?, ?, ?, ?, ?)";
+    $sql = "INSERT INTO users (nama, username, email, password, role, nomor_telp, instansi) VALUES (?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param('ssssss', $nama, $input_username, $email, $input_password, $role, $nomor_telp);
+    $stmt->bind_param('sssssss', $nama, $input_username, $email, $input_password, $role, $nomor_telp, $lembaga);
     
     if ($stmt->execute()) {
         $stmt->close();

@@ -1,5 +1,4 @@
 <?php
-session_start();
 include 'api/check_sesi.php';
 include 'api/db_check.php';
 ?>
@@ -41,7 +40,7 @@ include 'api/db_check.php';
                     <div style="text-align: center;">
                         <span><p class="my-2 mr-2 mb-2"><?php echo $row['role'] ?></p></span>
                     </div>
-                </a>                
+                </a>
                 <div id="collapseOne" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                     <div class="bg-white py-2 collapse-inner rounded">
                         <a class="collapse-item" href="profile.php">Profile</a>
@@ -84,19 +83,19 @@ include 'api/db_check.php';
                 </div>
             </li>
 
-            <!-- <hr class="sidebar-divider">
+            <hr class="sidebar-divider">
 
             <div class="sidebar-heading">
-                Halaman Admin
+                Hasil Laporan
             </div>
 
             <li class="nav-item">
-                <a class="nav-link" href="admin.html">
+                <a class="nav-link" href="kelola_data_user.php">
                     <i class="fas fa-fw fa-table"></i>
-                    <span>Tambah User</span></a>
+                    <span>Kelola Data</span></a>
             </li>
 
-            <hr class="sidebar-divider d-none d-md-block"> -->
+            <hr class="sidebar-divider d-none d-md-block">
         </ul>
         <!-- Penutup sidebar -->
          <!-- Main Content -->
@@ -107,94 +106,7 @@ include 'api/db_check.php';
                         <i class="fa fa-bars"></i>
                     </button>
 
-                    <ul class="navbar-nav ml-auto">
-
-                        <li class="nav-item dropdown no-arrow d-sm-none">
-                            <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-search fa-fw"></i>
-                            </a>
-                            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in"
-                                aria-labelledby="searchDropdown">
-                                <form class="form-inline mr-auto w-100 navbar-search">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control bg-light border-0 small"
-                                            placeholder="Search for..." aria-label="Search"
-                                            aria-describedby="basic-addon2">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="button">
-                                                <i class="fas fa-search fa-sm"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </li>
-
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-bell fa-fw"></i>
-                                <span class="badge badge-danger badge-counter">2</span>
-                            </a>
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="alertsDropdown">
-                                <h6 class="dropdown-header">
-                                    Alerts Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-primary">
-                                            <i class="fas fa-file-alt text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 12, 2019</div>
-                                        <span class="font-weight-bold">A new monthly report is ready to download!</span>
-                                    </div>
-                                </a>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="mr-3">
-                                        <div class="icon-circle bg-success">
-                                            <i class="fas fa-donate text-white"></i>
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div class="small text-gray-500">December 7, 2019</div>
-                                        $290.29 has been deposited into your account!
-                                    </div>
-                                </a>
-                                <a class="dropdown-item text-center small text-gray-500" href="#">Show All Alerts</a>
-                            </div>
-                        </li>
-
-                        <li class="nav-item dropdown no-arrow mx-1">
-                            <a class="nav-link dropdown-toggle" href="#" id="messagesDropdown" role="button"
-                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <i class="fas fa-envelope fa-fw"></i>
-                                <span class="badge badge-danger badge-counter">1</span>
-                            </a>
-                            <div class="dropdown-list dropdown-menu dropdown-menu-right shadow animated--grow-in"
-                                aria-labelledby="messagesDropdown">
-                                <h6 class="dropdown-header">
-                                    Message Center
-                                </h6>
-                                <a class="dropdown-item d-flex align-items-center" href="#">
-                                    <div class="dropdown-list-image mr-3">
-                                        <img class="rounded-circle" src="img/undraw_profile_1.svg"
-                                            alt="...">
-                                        <div class="status-indicator bg-success"></div>
-                                    </div>
-                                    <div class="font-weight-bold">
-                                        <div class="text-truncate">Hi there! I am wondering if you can help me with a
-                                            problem I've been having.</div>
-                                        <div class="small text-gray-500">Emily Fowler · 58m</div>
-                                    </div>
-                                    <a class="dropdown-item text-center small text-gray-500" href="#">Read More Messages</a>
-                                </a>
-                            </div>
-                        </li>
-                    </ul>
+                    
 
                 </nav>
         <div class="container-fluid mt-4">
@@ -210,7 +122,7 @@ include 'api/db_check.php';
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-4 text-center">
-                            <img src="<?php echo $row['foto_profil'] ?: 'img/user-1.jpg'; ?>" 
+                            <img src="./img/user-1.jpg" 
                                  alt="Foto Profil" 
                                  class="img-fluid rounded-circle mb-3" 
                                  style="width: 150px; height: 150px;">

@@ -17,6 +17,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
         $current_password = $row['password'];
         $current_role = $row['role'];
         $current_nomor_telp = $row['nomor_telp'];
+        $current_instansi = $row['lembaga'];
     }
     $nama_baru = !empty($_POST['nama']) ? htmlspecialchars($_POST['nama'], ENT_QUOTES, 'UTF-8') : $current_name;
     $email_baru = !empty($_POST['email']) ? htmlspecialchars($_POST['email'], ENT_QUOTES, 'UTF-8') : $current_email;
@@ -24,8 +25,9 @@ if($_SERVER["REQUEST_METHOD"] == "POST"){
     $password_baru = !empty($_POST['password']) ? htmlspecialchars($_POST['password'], ENT_QUOTES, 'UTF-8') : $current_password;
     $role_baru = !empty($_POST['role']) ? htmlspecialchars($_POST['role'], ENT_QUOTES, 'UTF-8') : $current_role;
     $nomor_telp_baru = !empty($_POST['nomor_telp']) ? htmlspecialchars($_POST['nomor_telp'], ENT_QUOTES, 'UTF-8') : $current_nomor_telp;
+    $instansi_baru = !empty($_POST['lembaga']) ? htmlspecialchars($_POST['lembaga'], ENT_QUOTES, 'UTF-8') : $current_instansi;
 
-    $query = "UPDATE users SET nama = '$nama_baru', email = '$email_baru', username = '$username_baru', password = '$password_baru', role = '$role_baru', nomor_telp = '$nomor_telp_baru' WHERE id = '$id'";
+    $query = "UPDATE users SET nama = '$nama_baru', email = '$email_baru', username = '$username_baru', password = '$password_baru', role = '$role_baru', nomor_telp = '$nomor_telp_baru', instansi = '$instansi_baru' WHERE id = '$id'";
     mysqli_query($conn, $query);
 
     if($conn->query($query) === true) {
